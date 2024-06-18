@@ -89,6 +89,9 @@ const RegisterScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Registrar</Text>
         </TouchableOpacity>
       )}
+      <Text style={styles.switchText} onPress={() => navigation.navigate('Login')}>
+        Já tem uma conta? Faça login aqui
+      </Text>
     </View>
   );
 };
@@ -128,6 +131,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  switchText: {
+    marginTop: 15,
+    color: 'blue',
+    textAlign: 'center',
   },
 });
 
