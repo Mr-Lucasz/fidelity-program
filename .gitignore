@@ -33,3 +33,10 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+#node_modules e lock.json e yarn.lock
+package-lock.json
+yarn.lock
+
+# Dependências
+/node_modules
