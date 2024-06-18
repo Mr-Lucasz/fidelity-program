@@ -1,3 +1,4 @@
+// src/screens/LoginScreen.js
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -8,14 +9,29 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
   const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Erro', 'Todos os campos são obrigatórios.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'O formato do email é inválido.');
+      return;
+    }
+
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigation.navigate('Profile');
     } catch (error) {
       console.error(error);
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Erro ao fazer login', error.message);
     } finally {
       setIsLoading(false);
     }
@@ -30,13 +46,15 @@ const LoginScreen = ({ navigation }) => {
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
+        accessibilityLabel="Email"
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Senha"
         value={password}
         secureTextEntry
         onChangeText={setPassword}
+        accessibilityLabel="Senha"
       />
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -44,7 +62,7 @@ const LoginScreen = ({ navigation }) => {
         <>
           <Button title="Login" onPress={handleLogin} />
           <Text style={styles.registerText} onPress={() => navigation.navigate('Register')}>
-            Don't have an account? Register here
+            Não tem uma conta? Registre-se aqui
           </Text>
         </>
       )}
