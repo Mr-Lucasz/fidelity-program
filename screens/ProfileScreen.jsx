@@ -1,13 +1,5 @@
-// src/screens/ProfileScreen.js
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 import { auth, firestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -19,9 +11,7 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userDoc = await getDoc(
-          doc(firestore, "users", auth.currentUser.uid)
-        );
+        const userDoc = await getDoc(doc(firestore, "users", auth.currentUser.uid));
         setUser(userDoc.data());
         setPoints(userDoc.data().points);
       } catch (error) {
@@ -50,7 +40,7 @@ const ProfileScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Home", { screen: "RegisterVisit" })}
+        onPress={() => navigation.navigate("RegisterVisit")}
       >
         <Text style={styles.buttonText}>Registrar Visita</Text>
       </TouchableOpacity>
