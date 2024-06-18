@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
@@ -49,14 +51,19 @@ const LoginScreen = ({ navigation }) => {
         autoCapitalize="none"
         accessibilityLabel="Email"
       />
+            <View style={styles.passwordContainer}>
       <TextInput
         style={styles.input}
         placeholder="Senha"
         value={password}
-        secureTextEntry
+        secureTextEntry={!showPassword}
         onChangeText={setPassword}
         accessibilityLabel="Senha"
       />
+         <TouchableOpacity style={styles.icon} onPress={() => setShowPassword(!showPassword)}>
+          <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={24} color="grey" />
+        </TouchableOpacity>
+      </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -111,6 +118,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     color: 'blue',
     textAlign: 'center',
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
+    marginTop: 12,
   },
 });
 
