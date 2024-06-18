@@ -1,6 +1,6 @@
 // src/screens/TransactionsScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import TransactionItem from '../components/TransactionItem';
 
@@ -10,7 +10,8 @@ const TransactionsScreen = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       const transactionsCollection = await firestore.collection('transactions')
-        .where('user_id', '==', auth.currentUser.uid)
+        .where('userId', '==', auth.currentUser.uid)
+        .orderBy('timestamp', 'desc')
         .get();
       setTransactions(transactionsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
@@ -23,7 +24,12 @@ const TransactionsScreen = () => {
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <TransactionItem transaction={item} />}
+        renderItem={({ item }) => (
+          <TransactionItem
+            transaction={item}
+          />
+        )}
+        ListEmptyComponent={<Text>Nenhuma transação registrada.</Text>}
       />
     </View>
   );
