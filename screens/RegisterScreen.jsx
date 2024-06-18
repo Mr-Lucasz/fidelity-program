@@ -14,17 +14,21 @@ const RegisterScreen = ({ navigation }) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       // Adiciona o nome do usuário ao Firestore
       await setDoc(doc(firestore, 'users', user.uid), {
         name: name,
         points: 0,
       });
-
+  
       navigation.navigate('Profile');
     } catch (error) {
-      console.error(error);
-      alert('Erro ao registrar: ' + error.message);
+      if (error.code === 'auth/email-already-in-use') {
+        alert('Este email já está sendo usado por outra conta.');
+      } else {
+        console.error(error);
+        alert('Erro ao registrar: ' + error.message);
+      }
     }
   };
 
