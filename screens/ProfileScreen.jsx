@@ -1,8 +1,15 @@
 // src/screens/ProfileScreen.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
-import { auth, firestore } from '../services/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { auth, firestore } from "../services/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 const ProfileScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -12,12 +19,14 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userDoc = await getDoc(doc(firestore, 'users', auth.currentUser.uid));
+        const userDoc = await getDoc(
+          doc(firestore, "users", auth.currentUser.uid)
+        );
         setUser(userDoc.data());
         setPoints(userDoc.data().points);
       } catch (error) {
         console.error(error);
-        Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
+        Alert.alert("Erro", "Não foi possível carregar os dados do usuário.");
       } finally {
         setIsLoading(false);
       }
@@ -39,7 +48,10 @@ const ProfileScreen = ({ navigation }) => {
         <Text style={styles.username}>Nome: {user?.name}</Text>
         <Text style={styles.points}>Saldo de Pontos: {points}</Text>
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('RegisterVisit')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Home", { screen: "RegisterVisit" })}
+      >
         <Text style={styles.buttonText}>Registrar Visita</Text>
       </TouchableOpacity>
     </View>
@@ -49,24 +61,24 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#f0f4f7',
+    backgroundColor: "#f0f4f7",
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f4f7',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f0f4f7",
   },
   profileCard: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -77,24 +89,24 @@ const styles = StyleSheet.create({
   },
   username: {
     fontSize: 24,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   points: {
     fontSize: 20,
-    color: '#555',
-    textAlign: 'center',
+    color: "#555",
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -104,9 +116,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
