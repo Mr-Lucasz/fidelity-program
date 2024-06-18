@@ -1,6 +1,6 @@
 // src/screens/RegisterScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, firestore } from '../services/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -9,8 +9,10 @@ const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -21,8 +23,10 @@ const RegisterScreen = ({ navigation }) => {
         points: 0,
       });
   
+      setLoading(false);
       navigation.navigate('Profile');
     } catch (error) {
+      setLoading(false);
       if (error.code === 'auth/email-already-in-use') {
         alert('Este email já está sendo usado por outra conta.');
       } else {
@@ -33,13 +37,78 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <TextInput placeholder="Nome" value={name} onChangeText={setName} />
-      <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
-      <TextInput placeholder="Password" value={password} secureTextEntry onChangeText={setPassword} />
-      <Button title="Register" onPress={handleRegister} />
+    <View style={styles.container}>
+      <Text style={styles.title}>Registrar</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nome"
+        value={name}
+        onChangeText={setName}
+        accessibilityLabel="Nome"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        accessibilityLabel="Email"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        value={password}
+        secureTextEntry
+        onChangeText={setPassword}
+        accessibilityLabel="Senha"
+      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Registrar</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#f8f8f8',
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  input: {
+    height: 50,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    backgroundColor: '#fff',
+  },
+  button: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+});
 
 export default RegisterScreen;
