@@ -35,8 +35,8 @@ yarn-error.*
 *.tsbuildinfo
 
 #node_modules e lock.json e yarn.lock
-package-lock.json
-yarn.lock
+
+*.lock
 
 # Dependências
 /node_modules
