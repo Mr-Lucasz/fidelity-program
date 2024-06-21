@@ -8,7 +8,7 @@ export function RegisterVisitScreen  ({ navigation })  {
   const [hasPermission, setHasPermission] = React.useState(null);
   const [scanned, setScanned] = React.useState(false);
 
-useEffect(() => {
+React.useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');

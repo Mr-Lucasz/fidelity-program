@@ -27,42 +27,47 @@ export function RewardsScreen() {
 
   const handleRedeem = async (reward) => {
     console.log(`Tentando resgatar a recompensa: ${reward.name}`);
-    Alert.alert(
-      "Confirmar Resgate",
-      `Você deseja resgatar a recompensa "${reward.name}" por ${reward.points} pontos?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel"
-        },
-        {
-          text: "Confirmar",
-          onPress: async () => {
-            if (userPoints >= reward.points) {
-              console.log(`Pontos antes do resgate: ${userPoints}`);
-              const userRef = doc(firestore, 'users', auth.currentUser.uid);
-              await updateDoc(userRef, {
-                points: userPoints - reward.points
-              });
+    return new Promise((resolve) => {
+      Alert.alert(
+        "Confirmar Resgate",
+        `Você deseja resgatar a recompensa "${reward.name}" por ${reward.points} pontos?`,
+        [
+          {
+            text: "Cancelar",
+            style: "cancel",
+            onPress: () => resolve(false)
+          },
+          {
+            text: "Confirmar",
+            onPress: async () => {
+              if (userPoints >= reward.points) {
+                console.log(`Pontos antes do resgate: ${userPoints}`);
+                const userRef = doc(firestore, 'users', auth.currentUser.uid);
+                await updateDoc(userRef, {
+                  points: userPoints - reward.points
+                });
 
-              // Adiciona a transação
-              await addDoc(collection(firestore, 'transactions'), {
-                userId: auth.currentUser.uid,
-                type: 'reward',
-                points: -reward.points,
-                timestamp: new Date(),
-              });
+                // Adiciona a transação
+                await addDoc(collection(firestore, 'transactions'), {
+                  userId: auth.currentUser.uid,
+                  type: 'reward',
+                  points: -reward.points,
+                  timestamp: new Date(),
+                });
 
-              setUserPoints(userPoints - reward.points);
-              console.log(`Pontos depois do resgate: ${userPoints - reward.points}`);
-              Alert.alert('Recompensa Resgatada', reward.name);
-            } else {
-              Alert.alert('Pontos Insuficientes', 'Você não tem pontos suficientes para resgatar esta recompensa.');
+                setUserPoints(userPoints - reward.points);
+                console.log(`Pontos depois do resgate: ${userPoints - reward.points}`);
+                Alert.alert('Recompensa Resgatada', reward.name);
+                resolve(true);
+              } else {
+                Alert.alert('Pontos Insuficientes', 'Você não tem pontos suficientes para resgatar esta recompensa.');
+                resolve(false);
+              }
             }
           }
-        }
-      ]
-    );
+        ]
+      );
+    });
   };
 
   return (
@@ -73,7 +78,7 @@ export function RewardsScreen() {
         renderItem={({ item }) => (
           <RewardCard
             reward={item}
-            onRedeem={() => handleRedeem(item)}
+            onRedeem={handleRedeem}
           />
         )}
       />

@@ -1,13 +1,21 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 
-export function RewardCard({ reward, onRedeem }) {
+export function RewardCard  ({ reward, onRedeem })  {
+  const [isRedeeming, setIsRedeeming] = useState(false);
+
+  const handleRedeemPress = async () => {
+    setIsRedeeming(true);
+    await onRedeem(reward);
+    setIsRedeeming(false);
+  };
+
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{reward.name}</Text>
       <Text style={styles.points}>Pontos: {reward.points}</Text>
-      <TouchableOpacity style={styles.button} onPress={() => onRedeem(reward)}>
-        <Text style={styles.buttonText}>Resgatar</Text>
+      <TouchableOpacity style={styles.button} onPress={handleRedeemPress} disabled={isRedeeming}>
+        {isRedeeming ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Resgatar</Text>}
       </TouchableOpacity>
     </View>
   );
