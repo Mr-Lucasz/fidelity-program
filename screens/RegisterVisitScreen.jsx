@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 import { Camera } from 'expo-camera';
 import { firestore, auth } from '../services/firebase';
 import { collection, query, where, getDocs, updateDoc, doc, increment } from "firebase/firestore";
 
 export function RegisterVisitScreen({ navigation }) {
-  const [hasPermission, setHasPermission] = React.useState(null);
-  const [scanned, setScanned] = React.useState(false);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
+      console.log("Requesting camera permissions...");
       const { status } = await Camera.requestPermissionsAsync();
+      console.log("Camera permission status:", status);
       setHasPermission(status === 'granted');
     })();
   }, []);
