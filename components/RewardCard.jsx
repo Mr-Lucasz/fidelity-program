@@ -1,16 +1,17 @@
-// src/components/RewardCard.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const RewardCard = ({ reward, onRedeem }) => (
-  <View style={styles.card}>
-    <Text style={styles.name}>{reward.name}</Text>
-    <Text style={styles.points}>Pontos: {reward.points}</Text>
-    <TouchableOpacity style={styles.button} onPress={() => onRedeem(reward)}>
-      <Text style={styles.buttonText}>Resgatar</Text>
-    </TouchableOpacity>
-  </View>
-);
+export function RewardCard({ reward, onRedeem }) {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.name}>{reward.name}</Text>
+      <Text style={styles.points}>Pontos: {reward.points}</Text>
+      <TouchableOpacity style={styles.button} onPress={() => onRedeem(reward)}>
+        <Text style={styles.buttonText}>Resgatar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -44,5 +45,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default RewardCard;

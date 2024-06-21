@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Button, Alert } from 'react-native';
+import { View, FlatList, StyleSheet, Alert } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import { RewardCard } from '../components/RewardCard';
 import { getDoc, doc, updateDoc, collection, getDocs, addDoc } from 'firebase/firestore';
@@ -26,25 +26,43 @@ export function RewardsScreen() {
   }, []);
 
   const handleRedeem = async (reward) => {
-    if (userPoints >= reward.points) {
-      const userRef = doc(firestore, 'users', auth.currentUser.uid);
-      await updateDoc(userRef, {
-        points: userPoints - reward.points
-      });
-  
-      // Adiciona a transação
-      await addDoc(collection(firestore, 'transactions'), {
-        userId: auth.currentUser.uid,
-        type: 'reward',
-        points: -reward.points,
-        timestamp: new Date(),
-      });
-  
-      setUserPoints(userPoints - reward.points);
-      Alert.alert('Recompensa Resgatada', reward.name);
-    } else {
-      Alert.alert('Pontos Insuficientes', 'Você não tem pontos suficientes para resgatar esta recompensa.');
-    }
+    console.log(`Tentando resgatar a recompensa: ${reward.name}`);
+    Alert.alert(
+      "Confirmar Resgate",
+      `Você deseja resgatar a recompensa "${reward.name}" por ${reward.points} pontos?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            if (userPoints >= reward.points) {
+              console.log(`Pontos antes do resgate: ${userPoints}`);
+              const userRef = doc(firestore, 'users', auth.currentUser.uid);
+              await updateDoc(userRef, {
+                points: userPoints - reward.points
+              });
+
+              // Adiciona a transação
+              await addDoc(collection(firestore, 'transactions'), {
+                userId: auth.currentUser.uid,
+                type: 'reward',
+                points: -reward.points,
+                timestamp: new Date(),
+              });
+
+              setUserPoints(userPoints - reward.points);
+              console.log(`Pontos depois do resgate: ${userPoints - reward.points}`);
+              Alert.alert('Recompensa Resgatada', reward.name);
+            } else {
+              Alert.alert('Pontos Insuficientes', 'Você não tem pontos suficientes para resgatar esta recompensa.');
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
