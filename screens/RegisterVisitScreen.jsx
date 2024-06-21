@@ -65,3 +65,4 @@ export function RegisterVisitScreen({ navigation }) {
     </View>
   );
 };
+
