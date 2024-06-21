@@ -1,16 +1,17 @@
 // src/screens/RegisterVisitScreen.js
 import React from 'react';
 import { View, Button, Alert, Text } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { Camera } from 'expo-camera';
 import { firestore, auth } from '../services/firebase';
+import { collection, query, where, getDocs, updateDoc, doc, increment } from "firebase/firestore";
 
-export function RegisterVisitScreen  ({ navigation })  {
+export function RegisterVisitScreen({ navigation }) {
   const [hasPermission, setHasPermission] = React.useState(null);
   const [scanned, setScanned] = React.useState(false);
 
-React.useEffect(() => {
+  React.useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
   }, []);
@@ -18,24 +19,27 @@ React.useEffect(() => {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     const qrCodeData = JSON.parse(data);
-  
-    // Validação no Firestore
-    const querySnapshot = await firestore.collection('qrCodes')
-      .where('id', '==', qrCodeData.id)
-      .where('timestamp', '==', qrCodeData.timestamp)
-      .where('used', '==', false)
-      .get();
-  
+
+    // Firestore validation
+    const q = query(
+      collection(firestore, 'qrCodes'),
+      where('id', '==', qrCodeData.id),
+      where('timestamp', '==', qrCodeData.timestamp),
+      where('used', '==', false)
+    );
+
+    const querySnapshot = await getDocs(q);
+
     if (!querySnapshot.empty) {
-      const userRef = firestore.doc(`users/${auth.currentUser.uid}`);
-      await userRef.update({
-        points: firebase.firestore.FieldValue.increment(10),
+      const userRef = doc(firestore, `users/${auth.currentUser.uid}`);
+      await updateDoc(userRef, {
+        points: increment(10),
       });
-  
-      // Marcar QR Code como usado
+
+      // Mark QR Code as used
       const qrCodeDoc = querySnapshot.docs[0];
-      await qrCodeDoc.ref.update({ used: true });
-  
+      await updateDoc(qrCodeDoc.ref, { used: true });
+
       Alert.alert('Visita registrada com sucesso!');
       navigation.navigate('Profile');
     } else {
@@ -52,7 +56,7 @@ React.useEffect(() => {
 
   return (
     <View style={{ flex: 1 }}>
-      <BarCodeScanner
+      <Camera
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={{ flex: 1 }}
       />
@@ -60,5 +64,3 @@ React.useEffect(() => {
     </View>
   );
 };
-
-export default RegisterVisitScreen;
