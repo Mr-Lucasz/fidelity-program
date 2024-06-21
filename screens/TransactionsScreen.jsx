@@ -1,4 +1,3 @@
-// src/screens/TransactionsScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { firestore, auth } from '../services/firebase';
@@ -25,9 +24,7 @@ const TransactionsScreen = () => {
         data={transactions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TransactionItem
-            transaction={item}
-          />
+          <TransactionItem transaction={item} />
         )}
         ListEmptyComponent={<Text>Nenhuma transação registrada.</Text>}
       />

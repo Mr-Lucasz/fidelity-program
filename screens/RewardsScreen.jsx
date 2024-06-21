@@ -1,4 +1,3 @@
-// src/screens/RewardsScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Button, Alert } from 'react-native';
 import { firestore, auth } from '../services/firebase';
