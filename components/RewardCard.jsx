@@ -6,8 +6,11 @@ export function RewardCard  ({ reward, onRedeem })  {
 
   const handleRedeemPress = async () => {
     setIsRedeeming(true);
-    await onRedeem(reward);
+    const success = await onRedeem(reward);
     setIsRedeeming(false);
+    if (!success) {
+      alert('Falha ao resgatar a recompensa.');
+    }
   };
 
   return (
