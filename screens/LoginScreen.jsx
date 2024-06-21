@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const LoginScreen = ({ navigation }) => {
+export function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -125,5 +125,3 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
-
-export default LoginScreen;

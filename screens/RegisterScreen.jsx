@@ -15,7 +15,7 @@ import { auth, firestore } from "../services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const RegisterScreen = ({ navigation }) => {
+export function RegisterScreen  ({ navigation })  {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");

@@ -4,7 +4,7 @@ import { View, Button, Alert, Text } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { firestore, auth } from '../services/firebase';
 
-const RegisterVisitScreen = ({ navigation }) => {
+export function RegisterVisitScreen  ({ navigation })  {
   const [hasPermission, setHasPermission] = React.useState(null);
   const [scanned, setScanned] = React.useState(false);
 

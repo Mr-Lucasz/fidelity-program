@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import { TransactionItem } from '../components/TransactionItem';
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
 
 export function TransactionsScreen() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      const transactionsCollection = await firestore.collection('transactions')
-        .where('userId', '==', auth.currentUser.uid)
-        .orderBy('timestamp', 'desc')
-        .get();
-      setTransactions(transactionsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const transactionsCollection = collection(firestore, 'transactions');
+      const q = query(transactionsCollection, where('userId', '==', auth.currentUser.uid), orderBy('timestamp', 'desc'));
+      const querySnapshot = await getDocs(q);
+      setTransactions(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
 
     fetchTransactions();
