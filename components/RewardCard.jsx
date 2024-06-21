@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 
-export function RewardCard  ({ reward, onRedeem })  {
+export function RewardCard({ reward, onRedeem }) {
   const [isRedeeming, setIsRedeeming] = useState(false);
 
   const handleRedeemPress = async () => {
     setIsRedeeming(true);
-    const success = await onRedeem(reward);
-    setIsRedeeming(false);
-    if (!success) {
-      alert('Falha ao resgatar a recompensa.');
+    try {
+      const success = await Promise.race([
+        onRedeem(reward),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
+      ]);
+      if (!success) {
+        alert('Falha ao resgatar a recompensa.');
+      }
+    } catch (error) {
+      alert('Erro ao tentar resgatar a recompensa.');
+    } finally {
+      setIsRedeeming(false);
     }
   };
 
@@ -17,7 +25,11 @@ export function RewardCard  ({ reward, onRedeem })  {
     <View style={styles.card}>
       <Text style={styles.name}>{reward.name}</Text>
       <Text style={styles.points}>Pontos: {reward.points}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleRedeemPress} disabled={isRedeeming}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleRedeemPress}
+        disabled={isRedeeming}
+      >
         {isRedeeming ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Resgatar</Text>}
       </TouchableOpacity>
     </View>

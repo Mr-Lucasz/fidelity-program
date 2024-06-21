@@ -26,7 +26,6 @@ export function RewardsScreen() {
   }, []);
 
   const handleRedeem = async (reward) => {
-    console.log(`Tentando resgatar a recompensa: ${reward.name}`);
     return new Promise((resolve) => {
       Alert.alert(
         "Confirmar Resgate",
@@ -42,13 +41,11 @@ export function RewardsScreen() {
             onPress: async () => {
               try {
                 if (userPoints >= reward.points) {
-                  console.log(`Pontos antes do resgate: ${userPoints}`);
                   const userRef = doc(firestore, 'users', auth.currentUser.uid);
                   await updateDoc(userRef, {
                     points: userPoints - reward.points
                   });
 
-                  // Adiciona a transação
                   await addDoc(collection(firestore, 'transactions'), {
                     userId: auth.currentUser.uid,
                     type: 'reward',
@@ -56,8 +53,7 @@ export function RewardsScreen() {
                     timestamp: new Date(),
                   });
 
-                  setUserPoints(userPoints - reward.points);
-                  console.log(`Pontos depois do resgate: ${userPoints - reward.points}`);
+                  setUserPoints(prevPoints => prevPoints - reward.points);
                   Alert.alert('Recompensa Resgatada', reward.name);
                   resolve(true);
                 } else {
