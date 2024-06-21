@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore } from "../services/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export function RegisterScreen  ({ navigation })  {
@@ -55,7 +55,10 @@ export function RegisterScreen  ({ navigation })  {
       // Adiciona o nome do usuário ao Firestore
       await setDoc(doc(firestore, "users", user.uid), {
         name: name,
+        email: email,
         points: 0,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       });
 
       setLoading(false);

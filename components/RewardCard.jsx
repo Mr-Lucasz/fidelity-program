@@ -15,7 +15,8 @@ export function RewardCard({ reward, onRedeem }) {
         alert('Falha ao resgatar a recompensa.');
       }
     } catch (error) {
-      alert('Erro ao tentar resgatar a recompensa.');
+      console.error(error); // Adicione esta linha para registrar o erro
+      alert(`Erro ao tentar resgatar a recompensa: ${error.message}`);
     } finally {
       setIsRedeeming(false);
     }
