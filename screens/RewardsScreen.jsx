@@ -64,6 +64,8 @@ export function RewardsScreen() {
   );
 }
 
+RewardsScreen.displayName = 'RewardsScreen';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

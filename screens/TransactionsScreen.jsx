@@ -32,6 +32,8 @@ export function TransactionsScreen() {
   );
 }
 
+TransactionsScreen.displayName = 'TransactionsScreen';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

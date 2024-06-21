@@ -13,3 +13,5 @@ export function AuthStack() {
     </Stack.Navigator>
   );
 }
+
+AuthStack.displayName = 'AuthStack';
