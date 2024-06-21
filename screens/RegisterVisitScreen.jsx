@@ -8,7 +8,7 @@ export function RegisterVisitScreen  ({ navigation })  {
   const [hasPermission, setHasPermission] = React.useState(null);
   const [scanned, setScanned] = React.useState(false);
 
-  React.useEffect(() => {
+useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
@@ -18,18 +18,24 @@ export function RegisterVisitScreen  ({ navigation })  {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     const qrCodeData = JSON.parse(data);
-    
+  
     // Validação no Firestore
     const querySnapshot = await firestore.collection('qrCodes')
       .where('id', '==', qrCodeData.id)
       .where('timestamp', '==', qrCodeData.timestamp)
+      .where('used', '==', false)
       .get();
-
+  
     if (!querySnapshot.empty) {
       const userRef = firestore.doc(`users/${auth.currentUser.uid}`);
       await userRef.update({
         points: firebase.firestore.FieldValue.increment(10),
       });
+  
+      // Marcar QR Code como usado
+      const qrCodeDoc = querySnapshot.docs[0];
+      await qrCodeDoc.ref.update({ used: true });
+  
       Alert.alert('Visita registrada com sucesso!');
       navigation.navigate('Profile');
     } else {

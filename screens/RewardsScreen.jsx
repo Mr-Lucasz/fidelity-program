@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Button, Alert } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import { RewardCard } from '../components/RewardCard';
-import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc, collection, getDocs, addDoc } from 'firebase/firestore';
 
 export function RewardsScreen() {
   const [rewards, setRewards] = useState([]);
@@ -10,8 +10,9 @@ export function RewardsScreen() {
 
   useEffect(() => {
     const fetchRewards = async () => {
-      const rewardsCollection = await firestore.collection('rewards').get();
-      setRewards(rewardsCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const rewardsCollection = collection(firestore, 'rewards');
+      const rewardsSnapshot = await getDocs(rewardsCollection);
+      setRewards(rewardsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
 
     const fetchUserPoints = async () => {
@@ -26,21 +27,19 @@ export function RewardsScreen() {
 
   const handleRedeem = async (reward) => {
     if (userPoints >= reward.points) {
-      // Atualiza os pontos do usuário
       const userRef = doc(firestore, 'users', auth.currentUser.uid);
       await updateDoc(userRef, {
         points: userPoints - reward.points
       });
-
-      // Lógica para adicionar a recompensa resgatada ao histórico de transações
-      await firestore.collection('transactions').add({
+  
+      // Adiciona a transação
+      await addDoc(collection(firestore, 'transactions'), {
         userId: auth.currentUser.uid,
         type: 'reward',
         points: -reward.points,
         timestamp: new Date(),
       });
-
-      // Atualiza os pontos na tela
+  
       setUserPoints(userPoints - reward.points);
       Alert.alert('Recompensa Resgatada', reward.name);
     } else {
