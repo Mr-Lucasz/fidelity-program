@@ -15,7 +15,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan QR codes."
-      }
+      },
+      "bundleIdentifier": "com.lucasrodrigues23.fidelityprogram"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d5a21223-ec55-4fc3-9784-955174538527"
+      }
     }
   }
 }
