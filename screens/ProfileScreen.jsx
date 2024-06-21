@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } fr
 import { auth, firestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-const ProfileScreen = ({ navigation }) => {
+export function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [points, setPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +46,9 @@ const ProfileScreen = ({ navigation }) => {
       </TouchableOpacity>
     </View>
   );
-};
+}
+
+ProfileScreen.displayName = 'ProfileScreen';
 
 const styles = StyleSheet.create({
   container: {
@@ -111,5 +113,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
-export default ProfileScreen;

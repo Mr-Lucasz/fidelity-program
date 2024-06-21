@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const TransactionItem = ({ transaction }) => {
+export function TransactionItem ({ transaction }) {
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -44,4 +44,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TransactionItem;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Text } from 'react-native';
 import { firestore, auth } from '../services/firebase';
-import TransactionItem from '../components/TransactionItem';
+import { TransactionItem } from '../components/TransactionItem';
 
-const TransactionsScreen = () => {
+export function TransactionsScreen() {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const TransactionsScreen = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -39,5 +39,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
 });
-
-export default TransactionsScreen;

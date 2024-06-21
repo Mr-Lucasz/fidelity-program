@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, Button, Alert } from 'react-native';
 import { firestore, auth } from '../services/firebase';
-import RewardCard from '../components/RewardCard';
+import { RewardCard } from '../components/RewardCard';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
 
-const RewardsScreen = () => {
+export function RewardsScreen() {
   const [rewards, setRewards] = useState([]);
   const [userPoints, setUserPoints] = useState(0);
 
@@ -62,7 +62,7 @@ const RewardsScreen = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -71,5 +71,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
   },
 });
-
-export default RewardsScreen;
