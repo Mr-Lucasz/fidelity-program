@@ -11,7 +11,7 @@ export function RegisterVisitScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       console.log("Requesting camera permissions...");
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       console.log("Camera permission status:", status);
       setHasPermission(status === 'granted');
     })();
