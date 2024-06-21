@@ -16,27 +16,25 @@ export function MainTabNavigator() {
           let iconName;
           switch (route.name) {
             case 'Profile':
-              iconName = focused ? 'ios-person' : 'ios-person-outline';
+              iconName = focused ? 'person' : 'person-outline';
               break;
             case 'RegisterVisit':
-              iconName = focused ? 'ios-qr-code' : 'ios-qr-code-outline';
+              iconName = focused ? 'qr-code' : 'qr-code-outline';
               break;
             case 'Rewards':
-              iconName = focused ? 'ios-gift' : 'ios-gift-outline';
+              iconName = focused ? 'gift' : 'gift-outline';
               break;
             case 'Transactions':
-              iconName = focused ? 'ios-list' : 'ios-list-outline';
+              iconName = focused ? 'list' : 'list-outline';
               break;
             default:
-              iconName = 'ios-alert';
+              iconName = 'alert';
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
       })}
-      tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-      }}
     >
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
       <Tab.Screen name="RegisterVisit" component={RegisterVisitScreen} options={{ title: 'Scanner QR' }} />

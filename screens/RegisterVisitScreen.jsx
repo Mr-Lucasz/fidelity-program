@@ -1,4 +1,3 @@
-// src/screens/RegisterVisitScreen.js
 import React from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 import { Camera } from 'expo-camera';
