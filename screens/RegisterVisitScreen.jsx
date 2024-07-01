@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Button, Alert, Text } from 'react-native';
+import { View, Button, Alert, Text, StyleSheet } from 'react-native';
 import { Camera } from 'expo-camera';
 import { auth, firestore } from '../services/firebase';
 import { collection, query, where, updateDoc, increment, getDocs, doc } from "firebase/firestore";
@@ -10,63 +10,41 @@ export function RegisterVisitScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      console.log('Requesting camera permissions...');
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
-      console.log('Camera permission status:', status);
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, data }) => {
+  const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    try {
-      const qrCodeData = JSON.parse(data);
-
-      // Firestore validation
-      const q = query(
-        collection(firestore, 'qrCodes'),
-        where('id', '==', qrCodeData.id),
-        where('timestamp', '==', qrCodeData.timestamp),
-        where('used', '==', false)
-      );
-
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        const userRef = doc(firestore, `users/${auth.currentUser.uid}`);
-        await updateDoc(userRef, {
-          points: increment(10),
-        });
-
-        // Mark QR Code as used
-        const qrCodeDoc = querySnapshot.docs[0];
-        await updateDoc(qrCodeDoc.ref, { used: true });
-
-        Alert.alert('Visita registrada com sucesso!');
-        navigation.navigate('Profile');
-      } else {
-        Alert.alert('QR Code inválido ou expirado!');
-      }
-    } catch (error) {
-      console.error('Error scanning QR code:', error);
-      Alert.alert('Erro ao processar o QR Code.');
-    }
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {
-    return <Text>Solicitando permissão para acessar a câmera...</Text>;
+    return <Text>Requesting for camera permission</Text>;
   }
+
   if (hasPermission === false) {
-    return <Text>Sem acesso à câmera</Text>;
+    return <Text>No access to camera</Text>;
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <Camera
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={{ flex: 1 }}
+        style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title="Escanear novamente" onPress={() => setScanned(false)} />}
+      {scanned && (
+        <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+});
