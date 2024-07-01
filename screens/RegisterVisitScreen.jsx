@@ -1,8 +1,7 @@
-// RegisterVisitScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 import { Camera } from 'expo-camera';
-import { auth, firestore } from '../services/firebase'; 
+import { auth, firestore } from '../services/firebase';
 import { collection, query, where, updateDoc, increment, getDocs, doc } from "firebase/firestore";
 
 export function RegisterVisitScreen({ navigation }) {
