@@ -1,8 +1,9 @@
+// RegisterVisitScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 import { Camera } from 'expo-camera';
-import { firestore, auth } from '../services/firebase';
-import { collection, query, where, getDocs, updateDoc, doc, increment } from 'firebase/firestore';
+import { auth, firestore } from '../services/firebase'; // Adjust the import path accordingly
+import { collection, query, where, updateDoc, increment, getDocs, doc } from "firebase/firestore";
 
 export function RegisterVisitScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -13,7 +14,7 @@ export function RegisterVisitScreen({ navigation }) {
       console.log('Requesting camera permissions...');
       const { status } = await Camera.requestCameraPermissionsAsync();
       console.log('Camera permission status:', status);
-      setHasPermission(status === 'granted');
+
     })();
   }, []);
 

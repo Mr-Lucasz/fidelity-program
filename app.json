@@ -14,7 +14,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan QR codes."
+        "NSCameraUsageDescription": "Permissão para acessar a câmera necessária para escanear QR Codes."
       }
     },
     "android": {
