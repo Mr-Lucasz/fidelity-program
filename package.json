@@ -20,7 +20,7 @@
     "eas-cli": "^10.0.2",
     "expo": "~51.0.14",
     "expo-barcode-scanner": "~13.0.1",
-    "expo-camera": "~15.0.11",
+    "expo-camera": "~15.0.12",
     "expo-location": "~17.0.1",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.12.2",
