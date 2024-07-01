@@ -22,5 +22,3 @@ export function AppNavigator() {
     </NavigationContainer>
   );
 }
-
-AppNavigator.displayName = 'AppNavigator';
