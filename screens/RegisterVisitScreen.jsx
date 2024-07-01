@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, Alert, Text } from 'react-native';
 import { Camera } from 'expo-camera';
-import { auth, firestore } from '../services/firebase'; // Adjust the import path accordingly
+import { auth, firestore } from '../services/firebase'; 
 import { collection, query, where, updateDoc, increment, getDocs, doc } from "firebase/firestore";
 
 export function RegisterVisitScreen({ navigation }) {
@@ -12,9 +12,9 @@ export function RegisterVisitScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       console.log('Requesting camera permissions...');
-      const { status } = await Camera.requestCameraPermissionsAsync();
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
       console.log('Camera permission status:', status);
-
     })();
   }, []);
 
