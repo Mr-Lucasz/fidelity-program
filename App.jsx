@@ -14,9 +14,6 @@ export function  App () {
 };
 
 App.displayName = 'App';
-console.log('Registering the App component');
-
-
-
+console.log('Registering the App component');                   
 // Register the main component
 registerRootComponent(App);

@@ -43,3 +43,5 @@ export function MainTabNavigator() {
     </Tab.Navigator>
   );
 }
+
+MainTabNavigator.displayName = 'MainTabNavigator';
