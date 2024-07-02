@@ -8,6 +8,16 @@ export function ProfileScreen({ navigation }) {
   const [points, setPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
+
+  const loggout = () => {
+    auth.signOut().then(() => {
+      navigation.navigate('Login');
+    }).catch((error) => {
+      console.error(error);
+      Alert.alert("Erro", "Não foi possível deslogar.");
+    });
+  }
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -34,6 +44,14 @@ export function ProfileScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* logout 
+      <TouchableOpacity
+        style={styles.button}
+        onPress={loggout}
+      >
+        <Text style={styles.buttonText}>Sair</Text>
+      </TouchableOpacity>
+      */}
       <View style={styles.profileCard}>
         <Text style={styles.username}>Nome: {user?.name}</Text>
         <Text style={styles.points}>Saldo de Pontos: {points}</Text>
