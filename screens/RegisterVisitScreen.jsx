@@ -11,6 +11,7 @@ export function RegisterVisitScreen() {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     try {
+      // Debugging Step: Log the scanned data
       console.log(`Scanned data: ${data}`);
       
       const qrDoc = await getDoc(doc(firestore, "qrCodes", data));
@@ -41,6 +42,10 @@ export function RegisterVisitScreen() {
     }
   };
 
+  const simulateScan = () => {
+    handleBarCodeScanned({ type: 'qr', data: 'qrCodeId1' });
+  };
+
   useEffect(() => {
     if (hasPermission?.status === 'undetermined') {
       requestPermission();
@@ -68,20 +73,14 @@ export function RegisterVisitScreen() {
           barcodeTypes: ["qr"],
         }}
       >
-        <View style={styles.scannerBox}>
-          <View style={styles.scannerFrame} />
-        </View>
         <View style={styles.buttonContainer}>
           {scanned && (
             <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />
           )}
         </View>
       </CameraView>
-      <TouchableOpacity
-        style={styles.scanButton}
-        onPress={() => setScanned(false)}
-      >
-        <Text style={styles.scanButtonText}>Start Scan</Text>
+      <TouchableOpacity style={styles.scanButton} onPress={simulateScan}>
+        <Text style={styles.scanButtonText}>Scanner</Text>
       </TouchableOpacity>
     </View>
   );
@@ -92,41 +91,27 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   camera: {
     flex: 1,
-    width: '100%',
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   scanButton: {
-    position: 'absolute',
-    bottom: 40,
-    width: '80%',
-    padding: 15,
-    backgroundColor: '#000',
-    borderRadius: 5,
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
   },
   scanButtonText: {
     color: '#fff',
     fontSize: 18,
-  },
-  scannerBox: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  scannerFrame: {
-    width: 250,
-    height: 250,
-    borderWidth: 2,
-    borderColor: '#fff',
+    fontWeight: 'bold',
   },
 });
