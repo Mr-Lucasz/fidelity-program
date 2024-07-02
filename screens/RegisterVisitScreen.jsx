@@ -1,24 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { CameraView , useCameraPermissions } from 'expo-camera';
 import { auth, firestore } from "../services/firebase";
-import {
-  collection,
-  query,
-  where,
-  updateDoc,
-  increment,
-  getDocs,
-  doc,
-} from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc, getDoc, increment } from "firebase/firestore";
 
 export function RegisterVisitScreen() {
   const [hasPermission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    try {
+      const qrDoc = await getDoc(doc(firestore, "qrCodes", data));
+      if (qrDoc.exists) {
+        const qrData = qrDoc.data();
+        const userRef = doc(firestore, "users", auth.currentUser.uid);
+        await updateDoc(userRef, {
+          points: increment(qrData.pointsRedeem)
+        });
+
+        await addDoc(collection(firestore, "transactions"), {
+          userId: auth.currentUser.uid,
+          type: "visit",
+          pointsRedeemed: qrData.pointsRedeem,
+          timestamp: new Date(),
+          rewardId: null,
+          transactionName: `Visita - ${qrData.pointsRedeem} pontos`
+        });
+
+        alert('Visita registrada com sucesso!');
+      } else {
+        alert('QR Code inválido.');
+      }
+    } catch (error) {
+      console.error("Erro ao registrar visita:", error);
+      alert('Erro ao registrar visita.');
+    }
   };
 
   useEffect(() => {

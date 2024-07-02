@@ -1,37 +1,13 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export function RewardCard({ reward, onRedeem }) {
-  const [isRedeeming, setIsRedeeming] = useState(false);
-
-  const handleRedeemPress = async () => {
-    setIsRedeeming(true);
-    try {
-      const success = await Promise.race([
-        onRedeem(reward),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000))
-      ]);
-      if (!success) {
-        alert('Falha ao resgatar a recompensa.');
-      }
-    } catch (error) {
-      console.error(error); // Adicione esta linha para registrar o erro
-      alert(`Erro ao tentar resgatar a recompensa: ${error.message}`);
-    } finally {
-      setIsRedeeming(false);
-    }
-  };
-
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{reward.name}</Text>
       <Text style={styles.points}>Pontos: {reward.points}</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleRedeemPress}
-        disabled={isRedeeming}
-      >
-        {isRedeeming ? <ActivityIndicator color="#FFF" /> : <Text style={styles.buttonText}>Resgatar</Text>}
+      <TouchableOpacity style={styles.button} onPress={() => onRedeem(reward)}>
+        <Text style={styles.buttonText}>Resgatar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -39,33 +15,35 @@ export function RewardCard({ reward, onRedeem }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFF',
+    backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
-    marginVertical: 8,
+    marginBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 4,
+    elevation: 5,
   },
   name: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 8,
   },
   points: {
     fontSize: 16,
-    color: '#888',
-    marginVertical: 8,
+    marginBottom: 8,
   },
   button: {
     backgroundColor: '#007BFF',
     paddingVertical: 10,
-    borderRadius: 5,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFF',
+    color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });

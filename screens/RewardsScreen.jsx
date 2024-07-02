@@ -49,8 +49,10 @@ export function RewardsScreen() {
                   await addDoc(collection(firestore, 'transactions'), {
                     userId: auth.currentUser.uid,
                     type: 'reward',
-                    points: -reward.points,
+                    pointsRedeemed: -reward.points,
                     timestamp: new Date(),
+                    rewardId: reward.id,
+                    transactionName: `${reward.points} pontos, ${reward.name}`
                   });
 
                   setUserPoints(prevPoints => prevPoints - reward.points);

@@ -4,7 +4,7 @@ import { AppNavigator } from './navigation/AppNavigator';
 import { registerRootComponent } from 'expo';
 
 console.log('App component is being loaded');
-export function  App () {
+export function App() {
   console.log('App component is rendered');
   return (
     <AuthProvider>

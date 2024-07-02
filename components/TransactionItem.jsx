@@ -10,9 +10,9 @@ export function TransactionItem ({ transaction }) {
 
   return (
     <View style={styles.item}>
-      <Text style={styles.type}>{transaction.type}</Text>
-      <Text style={styles.points}>Pontos: {transaction.points}</Text>
-      <Text style={styles.date}>{formatDate(transaction.timestamp)}</Text>
+      <Text style={styles.name}>{transaction.transactionName}</Text>
+      <Text style={styles.points}>Pontos: {transaction.pointsRedeemed}</Text>
+      <Text style={styles.timestamp}>{new Date(transaction.timestamp.seconds * 1000).toLocaleDateString()}</Text>
     </View>
   );
 };
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     color: '#888',
     marginVertical: 8,
   },
-  date: {
+  timestamp: {
     fontSize: 14,
     color: '#AAA',
   },
