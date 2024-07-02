@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, Alert, Text, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native';
 import { Camera } from "expo-camera";
+import * as Permissions from 'expo-permissions';
 import { auth, firestore } from "../services/firebase";
 import {
   collection,
@@ -13,63 +14,56 @@ import {
 } from "firebase/firestore";
 
 export function RegisterVisitScreen() {
-  const [permission, setPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [scannedData, setScannedData] = useState('');
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setPermission(status === "granted");
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      setHasPermission(status === 'granted');
     })();
   }, []);
 
-  if (permission === null) {
-    return <Text>Requesting for camera permission...</Text>;
-  }
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setScannedData(data);
+    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+  };
 
-  if (!permission) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={() => requestPermission()} title="grant permission" />
-      </View>
-    );
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.container}>
       <Camera
-        style={styles.camera}
-        type={Camera.Constants.Type.back}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+        barCodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
       />
-      {scanned && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-      )}
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scannedData ? <Text style={styles.scannedData}>{scannedData}</Text> : null}
     </View>
   );
-
-  function handleBarCodeScanned({ type, data }) {
-    setScanned(true);
-    Alert.alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-    // Aqui você pode adicionar a lógica para lidar com o código de barras escaneado
-  }
-
-  async function requestPermission() {
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    setPermission(status === "granted");
-  }
-}
+};
 
 RegisterVisitScreen.displayName = "RegisterVisitScreen";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  camera: {
-    flex: 1,
+  scannedData: {
+    marginTop: 20,
+    fontSize: 18,
+    color: 'white',
   },
 });
