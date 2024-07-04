@@ -25,8 +25,11 @@
       "permissions": [
         "CAMERA",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ]
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.lucasrodrigues23.fidelityprogram"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,6 +43,11 @@
           "recordAudioAndroid": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d5a21223-ec55-4fc3-9784-955174538527"
+      }
+    }
   }
 }

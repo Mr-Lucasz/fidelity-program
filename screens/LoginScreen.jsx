@@ -33,7 +33,7 @@ export function LoginScreen ({ navigation }) {
       navigation.navigate('Profile');
     } catch (error) {
       console.error(error);
-      Alert.alert('Erro ao fazer login', error.message);
+      Alert.alert('Erro ao fazer login Senha ou Email Invalido', error.message);
     } finally {
       setIsLoading(false);
     }

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { auth, firestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -61,7 +62,7 @@ export function ProfileScreen({ navigation }) {
           loggout();
         }}
       >
-        <Icon name="sign-out" size={30} color="#000" />
+        <Ionicons name="exit" size={30} color="#000" />
       </TouchableOpacity>
 
       <View style={styles.profileCard}>
@@ -89,9 +90,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f4f7",
   },
   logoutButton: {
-    position: 'absolute',
-    top: 10, 
-    right: 10, 
+    position: "absolute",
+    top: 0,
+    right: 10,
   },
   loadingContainer: {
     flex: 1,
