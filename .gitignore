@@ -40,3 +40,9 @@ yarn-error.*
 
 # Dependências
 /node_modules
+
+# Arquivos de build
+/dist
+
+# Arquivos de configuração
+.env

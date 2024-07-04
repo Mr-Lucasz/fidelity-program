@@ -44,14 +44,14 @@ export function ProfileScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* logout 
+
       <TouchableOpacity
         style={styles.button}
         onPress={loggout}
       >
         <Text style={styles.buttonText}>Sair</Text>
       </TouchableOpacity>
-      */}
+    
       <View style={styles.profileCard}>
         <Text style={styles.username}>Nome: {user?.name}</Text>
         <Text style={styles.points}>Saldo de Pontos: {points}</Text>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#007BFF",
-    paddingVertical: 15,
+    paddingVertical: 16,
     paddingHorizontal: 30,
     borderRadius: 8,
     alignItems: "center",
