@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { auth, firestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -8,20 +15,24 @@ export function ProfileScreen({ navigation }) {
   const [points, setPoints] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const loggout = () => {
-    auth.signOut().then(() => {
-      navigation.navigate('Login');
-    }).catch((error) => {
-      console.error(error);
-      Alert.alert("Erro", "Não foi possível deslogar.");
-    });
-  }
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        console.error(error);
+        Alert.alert("Erro", "Não foi possível deslogar.");
+      });
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userDoc = await getDoc(doc(firestore, "users", auth.currentUser.uid));
+        const userDoc = await getDoc(
+          doc(firestore, "users", auth.currentUser.uid)
+        );
         setUser(userDoc.data());
         setPoints(userDoc.data().points);
       } catch (error) {
@@ -44,14 +55,15 @@ export function ProfileScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-
       <TouchableOpacity
-        style={styles.button}
-        onPress={loggout}
+        style={styles.logoutButton}
+        onPress={() => {
+          loggout();
+        }}
       >
-        <Text style={styles.buttonText}>Sair</Text>
+        <Icon name="sign-out" size={30} color="#000" />
       </TouchableOpacity>
-    
+
       <View style={styles.profileCard}>
         <Text style={styles.username}>Nome: {user?.name}</Text>
         <Text style={styles.points}>Saldo de Pontos: {points}</Text>
@@ -66,7 +78,7 @@ export function ProfileScreen({ navigation }) {
   );
 }
 
-ProfileScreen.displayName = 'ProfileScreen';
+ProfileScreen.displayName = "ProfileScreen";
 
 const styles = StyleSheet.create({
   container: {
@@ -75,6 +87,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "#f0f4f7",
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 10, 
+    right: 10, 
   },
   loadingContainer: {
     flex: 1,
