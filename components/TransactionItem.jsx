@@ -1,6 +1,7 @@
 // src/components/TransactionItem.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { GlobalStyles } from '../styles/GlobalStyles';
 
 export function TransactionItem ({ transaction }) {
   const formatDate = (timestamp) => {
@@ -19,7 +20,7 @@ export function TransactionItem ({ transaction }) {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#FFF',
+    backgroundColor: GlobalStyles.container.backgroundColor,
     borderRadius: 8,
     padding: 16,
     marginVertical: 8,
@@ -29,18 +30,19 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-  type: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  name: {
+    fontSize: GlobalStyles.title.fontSize,
+    fontWeight: GlobalStyles.title.fontWeight,
+    color: GlobalStyles.title.color,
   },
   points: {
-    fontSize: 16,
-    color: '#888',
+    fontSize: GlobalStyles.text.fontSize,
+    color: GlobalStyles.text.color,
     marginVertical: 8,
   },
   timestamp: {
-    fontSize: 14,
-    color: '#AAA',
+    fontSize: GlobalStyles.text.fontSize,
+    color: GlobalStyles.text.color,
   },
 });
 

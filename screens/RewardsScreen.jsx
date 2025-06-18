@@ -3,6 +3,7 @@ import { View, FlatList, StyleSheet, Alert } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import { RewardCard } from '../components/RewardCard';
 import { getDoc, doc, updateDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+import { GlobalStyles } from '../styles/GlobalStyles';
 
 export function RewardsScreen() {
   const [rewards, setRewards] = useState([]);
@@ -75,7 +76,7 @@ export function RewardsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       <FlatList
         data={rewards}
         keyExtractor={(item) => item.id}

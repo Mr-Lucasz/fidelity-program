@@ -38,6 +38,10 @@ yarn-error.*
 
 *.lock
 
+# Ignorar arquivos de lock do npm/yarn
+package-lock.json
+yarn.lock
+
 # Dependências
 /node_modules
 

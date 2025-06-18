@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Alert, TouchableOpacity } from 'react-n
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { auth, firestore } from "../services/firebase";
 import { collection, addDoc, updateDoc, doc, getDoc, increment } from "firebase/firestore";
+import { GlobalStyles } from '../styles/GlobalStyles';
 
 export function RegisterVisitScreen() {
   const [hasPermission, requestPermission] = useCameraPermissions();
@@ -65,9 +66,9 @@ export function RegisterVisitScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       <CameraView 
-        style={styles.camera}
+        style={{ flex: 1 }}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         barCodeScannerSettings={{
           barcodeTypes: ["qr"],
@@ -79,8 +80,8 @@ export function RegisterVisitScreen() {
           )}
         </View>
       </CameraView>
-      <TouchableOpacity style={styles.scanButton} onPress={simulateScan}>
-        <Text style={styles.scanButtonText}>Scanner</Text>
+      <TouchableOpacity style={GlobalStyles.button} onPress={simulateScan}>
+        <Text style={GlobalStyles.buttonText}>Scanner</Text>
       </TouchableOpacity>
     </View>
   );
@@ -99,19 +100,5 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  scanButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20,
-  },
-  scanButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { GlobalStyles } from '../styles/GlobalStyles';
 
 export function RewardCard({ reward, onRedeem }) {
   return (
@@ -15,7 +16,7 @@ export function RewardCard({ reward, onRedeem }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: GlobalStyles.container.backgroundColor,
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
@@ -26,24 +27,16 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   name: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: GlobalStyles.title.fontSize,
+    fontWeight: GlobalStyles.title.fontWeight,
     marginBottom: 8,
+    color: GlobalStyles.title.color,
   },
   points: {
-    fontSize: 16,
+    fontSize: GlobalStyles.text.fontSize,
     marginBottom: 8,
+    color: GlobalStyles.text.color,
   },
-  button: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  button: GlobalStyles.button,
+  buttonText: GlobalStyles.buttonText,
 });
