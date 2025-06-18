@@ -14,167 +14,121 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, firestore } from "../services/firebase";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Toast from 'react-native-toast-message';
+import { GlobalStyles } from '../styles/GlobalStyles';
+
+const RegisterSchema = Yup.object().shape({
+  name: Yup.string().required('Nome obrigatório'),
+  email: Yup.string().email('Email inválido').required('Email obrigatório'),
+  password: Yup.string().min(6, 'Mínimo 6 caracteres').required('Senha obrigatória'),
+});
 
 export function RegisterScreen  ({ navigation })  {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
-
-  const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert("Erro", "Todos os campos são obrigatórios.");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      Alert.alert("Erro", "O formato do email é inválido.");
-      return;
-    }
-
-    if (password.length < 6) {
-      Alert.alert("Erro", "A senha deve ter no mínimo 6 caracteres.");
-      return;
-    }
-
+  const handleRegister = async (values) => {
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
       // Adiciona o nome do usuário ao Firestore
-      await setDoc(doc(firestore, "users", user.uid), {
-        name: name,
-        email: email,
+      await setDoc(doc(firestore, 'users', user.uid), {
+        name: values.name,
+        email: values.email,
         points: 0,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
 
       setLoading(false);
-      navigation.navigate("Profile");
+      navigation.navigate('Profile');
     } catch (error) {
       setLoading(false);
-      if (error.code === "auth/email-already-in-use") {
-        Alert.alert("Erro", "Este email já está sendo usado por outra conta.");
+      if (error.code === 'auth/email-already-in-use') {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro',
+          text2: 'Este email já está sendo usado por outra conta.',
+        });
       } else {
         console.error(error);
-        Alert.alert("Erro ao registrar", error.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao registrar',
+          text2: error.message,
+        });
       }
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Registrar</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nome"
-        value={name}
-        onChangeText={setName}
-        accessibilityLabel="Nome"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        accessibilityLabel="Email"
-      />
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          secureTextEntry={!showPassword}
-          onChangeText={setPassword}
-          accessibilityLabel="Senha"
-        />
-        <TouchableOpacity
-          style={styles.icon}
-          onPress={() => setShowPassword(!showPassword)}
-        >
-          <Icon
-            name={showPassword ? "visibility" : "visibility-off"}
-            size={24}
-            color="grey"
+    <Formik
+      initialValues={{ name: '', email: '', password: '' }}
+      validationSchema={RegisterSchema}
+      onSubmit={handleRegister}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        <View style={GlobalStyles.container}>
+          <Text style={GlobalStyles.title}>Registrar</Text>
+          <TextInput
+            style={GlobalStyles.input}
+            placeholder="Nome"
+            value={values.name}
+            onChangeText={handleChange('name')}
+            onBlur={handleBlur('name')}
+            accessibilityLabel="Nome"
           />
-        </TouchableOpacity>
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Registrar</Text>
-        </TouchableOpacity>
+          {errors.name && touched.name && (
+            <Text style={GlobalStyles.errorText}>{errors.name}</Text>
+          )}
+          <TextInput
+            style={GlobalStyles.input}
+            placeholder="Email"
+            value={values.email}
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            keyboardType="email-address"
+            accessibilityLabel="Email"
+            autoCapitalize="none"
+          />
+          {errors.email && touched.email && (
+            <Text style={GlobalStyles.errorText}>{errors.email}</Text>
+          )}
+          <View style={{ position: 'relative' }}>
+            <TextInput
+              style={GlobalStyles.input}
+              placeholder="Senha"
+              value={values.password}
+              secureTextEntry={!showPassword}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              accessibilityLabel="Senha"
+            />
+            <TouchableOpacity style={{ position: 'absolute', right: 10, top: 18 }} onPress={() => setShowPassword(!showPassword)}>
+              <Icon name={showPassword ? 'visibility' : 'visibility-off'} size={24} color="grey" />
+            </TouchableOpacity>
+          </View>
+          {errors.password && touched.password && (
+            <Text style={GlobalStyles.errorText}>{errors.password}</Text>
+          )}
+          {loading ? (
+            <ActivityIndicator size="large" color={GlobalStyles.button.backgroundColor || '#0000ff'} />
+          ) : (
+            <TouchableOpacity style={GlobalStyles.button} onPress={handleSubmit}>
+              <Text style={GlobalStyles.buttonText}>Registrar</Text>
+            </TouchableOpacity>
+          )}
+          <Text style={GlobalStyles.text} onPress={() => navigation.navigate('Login')}>
+            Já tem uma conta? Faça login aqui
+          </Text>
+        </View>
       )}
-      <Text
-        style={styles.switchText}
-        onPress={() => navigation.navigate("Login")}
-      >
-        Já tem uma conta? Faça login aqui
-      </Text>
-    </View>
+    </Formik>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#f8f8f8",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#333",
-  },
-  input: {
-    height: 50,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  switchText: {
-    marginTop: 15,
-    color: "blue",
-    textAlign: "center",
-  },
-  icon: {
-    position: 'absolute',
-    right: 10,
-    marginTop: 12,
-  },
-});
 
 export default RegisterScreen;

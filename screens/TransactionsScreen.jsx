@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, Text } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { firestore, auth } from '../services/firebase';
 import { TransactionItem } from '../components/TransactionItem';
 import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import { GlobalStyles } from '../styles/GlobalStyles';
 
 export function TransactionsScreen() {
   const [transactions, setTransactions] = useState([]);
@@ -19,25 +20,17 @@ export function TransactionsScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       <FlatList
         data={transactions}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TransactionItem transaction={item} />
         )}
-        ListEmptyComponent={<Text>Nenhuma transação registrada.</Text>}
+        ListEmptyComponent={<Text style={GlobalStyles.text}>Nenhuma transação registrada.</Text>}
       />
     </View>
   );
 }
 
 TransactionsScreen.displayName = 'TransactionsScreen';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#F5F5F5',
-  },
-});
